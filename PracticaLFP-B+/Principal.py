@@ -27,8 +27,12 @@ def InventarioInicial():
         for i in leer:
 
             nombre,cantidad,precio,ubicacion = i[1].split(';')
-            datos = productos(nombre,cantidad,precio,ubicacion)
-            produc.append(datos)
+            try:
+                if int(cantidad):
+                    datos = productos(nombre,cantidad,precio,ubicacion)
+                    produc.append(datos)
+            except:
+                print(Fore.BLUE + f'El producto de "{nombre}" es una Cantidad con punto decimal no sera valida')
 
         rutaArch.close()
         print(Fore.GREEN + f'"ARCHIVO LEIDO"')
@@ -53,26 +57,34 @@ def Movimientos():
         for i in leer:
             if i[0] == "agregar_stock":
                 nombre,cantidad,ubicacion = i[1].split(';')
-                for j in range(len(produc)):
-                    if nombre == produc[j].getNombre(): 
-                        if ubicacion == produc[j].getUbicacion():
-                            sumatoria = int(produc[j].getCantidad()) + int(cantidad)
-                            produc[j].setCantidad(sumatoria)
-                        else:
-                            print(Fore.RED + f'El producto: "{nombre}"; no se en cuentra en "{ubicacion}"')
-            elif i[0] == "vender_producto":
-                nombre,cantidad,ubicacion = i[1].split(';')
-                for j in range(len(produc)):
-                    if nombre == produc[j].getNombre():
-                        if ubicacion == produc[j].getUbicacion():
-                            if int(produc[j].getCantidad()) > 0:
-                                if int(cantidad) <= int(produc[j].getCantidad()):
-                                    sumatoria = int(produc[j].getCantidad()) - int(cantidad)
+                try:
+                    if int(cantidad):
+                        for j in range(len(produc)):
+                            if nombre == produc[j].getNombre(): 
+                                if ubicacion == produc[j].getUbicacion():
+                                    sumatoria = int(produc[j].getCantidad()) + int(cantidad)
                                     produc[j].setCantidad(sumatoria)
                                 else:
-                                    print(Fore.RED + f'La cantidad de: "{nombre}" sobre pasa nuestro "Inventario"')
-                            else:
-                                print(Fore.RED + f'No hay en exitencia "{nombre}"')
+                                    print(Fore.RED + f'El producto: "{nombre}"; no se en cuentra en "{ubicacion}"')
+                except:
+                    print(Fore.BLUE + f'El producto de "{nombre}" es una Cantidad con punto decimal no sera valida')
+            elif i[0] == "vender_producto":
+                nombre,cantidad,ubicacion = i[1].split(';')
+                try:
+                    if int(cantidad):
+                        for j in range(len(produc)):
+                            if nombre == produc[j].getNombre():
+                                if ubicacion == produc[j].getUbicacion():
+                                    if int(produc[j].getCantidad()) > 0:
+                                        if int(cantidad) <= int(produc[j].getCantidad()):
+                                            sumatoria = int(produc[j].getCantidad()) - int(cantidad)
+                                            produc[j].setCantidad(sumatoria)
+                                        else:
+                                            print(Fore.RED + f'La cantidad de: "{nombre}" sobre pasa nuestro "Inventario"')
+                                    else:
+                                        print(Fore.RED + f'No hay en exitencia "{nombre}"')
+                except:
+                    print(Fore.WHITE + f'El producto de "{nombre}" es una Cantidad con punto decimal no sera valida')
         rutaArch.close()
         print(Fore.GREEN + f'"MOVIMIENTOS EXITOSOS"')
     except FileNotFoundError:
