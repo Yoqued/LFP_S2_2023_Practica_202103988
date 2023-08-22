@@ -14,6 +14,7 @@ def limpiadorRuta(file_path):
 def InventarioInicial():
     global produc
     produc = []
+    no_repetidos = []
     print(Fore.RESET + '------------------------------------------------')
     print('Ingrese "RUTA DE ARCHIVO" de "INVENTARIO"')
     print('------------------------------------------------')
@@ -29,8 +30,12 @@ def InventarioInicial():
             nombre,cantidad,precio,ubicacion = i[1].split(';')
             try:
                 if int(cantidad):
-                    datos = productos(nombre,cantidad,precio,ubicacion)
-                    produc.append(datos)
+                    verificador = (nombre, ubicacion)
+                    print(verificador)
+                    if verificador not in no_repetidos:
+                        datos = productos(nombre,cantidad,precio,ubicacion)
+                        produc.append(datos)
+                        no_repetidos.append(verificador)
             except:
                 print(Fore.BLUE + f'El producto de "{nombre}" es una Cantidad con punto decimal no sera valida')
 
